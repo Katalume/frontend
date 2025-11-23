@@ -8,7 +8,6 @@ import SearchBar from "../components/SearchBar";
 import { Problem, FilterState } from "@/types";
 import { fetchProblems } from "@/lib/api";
 
-// Hardcoded sample data
 const SAMPLE_PROBLEMS: Problem[] = [
   {
     id: "1",
@@ -114,44 +113,41 @@ export default function ProblemsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch problems from API with fallback to hardcoded data
   useEffect(() => {
     const loadProblems = async () => {
       try {
         setIsLoading(true);
+        // Try to get problems from the backend API
         const data = await fetchProblems();
 
-        // Use ternary operator to check if data is null or empty
+        // If API doesn't return any data, use our hardcoded sample problems instead
         const problemsData =
           !data || data.length === 0 ? SAMPLE_PROBLEMS : data;
         setProblems(problemsData);
       } catch (error) {
         console.error("Failed to fetch problems, using hardcoded data:", error);
-        // Fallback to hardcoded data on error
+        // If API call fails, just use the hardcoded sample data
         setProblems(SAMPLE_PROBLEMS);
       } finally {
         setIsLoading(false);
       }
-    };
+    }
 
     loadProblems();
-  }, []); // Empty dependency array - runs once on mount
+  }, []);
 
-  // Filter problems based on current filters
+
   const filteredProblems = useMemo(() => {
     let filtered = [...problems];
 
-    // Filter by level/difficulty
     if (filters.level !== "All Levels") {
       filtered = filtered.filter((p) => p.difficulty === filters.level);
     }
 
-    // Filter by category
     if (filters.category !== "All Categories") {
       filtered = filtered.filter((p) => p.category === filters.category);
     }
 
-    // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
@@ -162,7 +158,6 @@ export default function ProblemsPage() {
       );
     }
 
-    // Filter by status
     if (filters.statusFilter === "solved") {
       filtered = filtered.filter((p) => p.status === "solved");
     } else if (filters.statusFilter === "todo") {
@@ -181,12 +176,10 @@ export default function ProblemsPage() {
 
   const handleLogout = () => {
     console.log("Logging out...");
-    // TODO: Add logout API call here
   };
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
       <Sidebar
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
@@ -194,7 +187,6 @@ export default function ProblemsPage() {
         onClose={() => setIsSidebarOpen(false)}
       />
 
-      {/* Sidebar Toggle Button - Floating */}
       {!isSidebarOpen && (
         <button
           onClick={() => setIsSidebarOpen(true)}
@@ -217,18 +209,14 @@ export default function ProblemsPage() {
         </button>
       )}
 
-      {/* Main Content */}
       <div
         className={`flex-1 transition-all duration-300 ${
           isSidebarOpen ? "ml-60" : "ml-0"
         }`}
       >
-        {/* Navbar */}
         <Navbar onLogout={handleLogout} isSidebarOpen={isSidebarOpen} />
 
-        {/* Content Area */}
         <main className="mt-16 p-8">
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Practice Problems
@@ -238,10 +226,8 @@ export default function ProblemsPage() {
             </p>
           </div>
 
-          {/* Filters Section */}
           <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
             <div className="flex items-center gap-4">
-              {/* Level Filter */}
               <div className="relative">
                 <select
                   value={filters.level}
@@ -270,7 +256,6 @@ export default function ProblemsPage() {
                 </svg>
               </div>
 
-              {/* Category Filter */}
               <div className="relative">
                 <select
                   value={filters.category}
@@ -302,19 +287,16 @@ export default function ProblemsPage() {
                 </svg>
               </div>
 
-              {/* Problem Count */}
               <div className="ml-auto text-sm text-gray-600 font-medium">
                 {filteredProblems.length} problems
               </div>
             </div>
           </div>
 
-          {/* Search Bar */}
           <div className="mb-6">
             <SearchBar onSearch={setSearchQuery} />
           </div>
 
-          {/* Status Tabs */}
           <div className="flex gap-3 mb-6">
             <button
               onClick={() => setFilters({ ...filters, statusFilter: "all" })}
@@ -348,7 +330,6 @@ export default function ProblemsPage() {
             </button>
           </div>
 
-          {/* Problems Table */}
           {isLoading ? (
             <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
               <div className="flex flex-col items-center justify-center">

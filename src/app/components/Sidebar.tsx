@@ -131,7 +131,6 @@ export default function Sidebar({
           isOpen ? "translate-x-0" : "-translate-x-60"
         }`}
       >
-        {/* Logo Section */}
         <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-sm">
@@ -139,7 +138,6 @@ export default function Sidebar({
             </div>
             <span className="font-semibold text-lg">MLPractice</span>
           </div>
-          {/* Close Button */}
           {isOpen && onClose && (
             <button
               onClick={onClose}
@@ -163,7 +161,6 @@ export default function Sidebar({
           )}
         </div>
 
-        {/* Main Navigation */}
         <nav className="flex-1 py-4">
           <div className="space-y-1 px-3">
             {mainNavItems.map((item) => {
@@ -185,7 +182,6 @@ export default function Sidebar({
             })}
           </div>
 
-          {/* Categories Section */}
           <div className="mt-8 px-3">
             <h3 className="px-4 mb-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Categories
@@ -209,7 +205,6 @@ export default function Sidebar({
         </nav>
       </aside>
 
-      {/* Overlay when sidebar is open */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-10 lg:hidden"

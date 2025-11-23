@@ -18,7 +18,6 @@ export default function Navbar({
       onLogout();
     } else {
       console.log("Logout clicked");
-      // TODO: Add logout API call here
     }
   };
 
@@ -28,9 +27,7 @@ export default function Navbar({
         isSidebarOpen ? "left-60" : "left-0"
       }`}
     >
-      {/* Right Side Actions */}
       <div className="flex items-center gap-3">
-        {/* Dark Mode Toggle */}
         <button
           onClick={() => setIsDarkMode(!isDarkMode)}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -67,7 +64,6 @@ export default function Navbar({
           )}
         </button>
 
-        {/* Notifications */}
         <button
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
           aria-label="Notifications"
@@ -88,14 +84,12 @@ export default function Navbar({
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
 
-        {/* User Profile */}
         <button className="flex items-center gap-2 p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
           <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
             A
           </div>
         </button>
 
-        {/* Logout Button */}
         <button
           onClick={handleLogout}
           className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"

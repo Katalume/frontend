@@ -38,7 +38,7 @@ describe("LoginPage", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    fireEvent.click(screen.getByTestId("auth-submit"));
 
     await waitFor(() => {
       expect(loginMock).toHaveBeenCalledWith({
@@ -53,7 +53,7 @@ describe("LoginPage", () => {
   it("submits signup payload", async () => {
     render(<LoginPage />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
+    fireEvent.click(screen.getByTestId("auth-tab-signup"));
 
     fireEvent.change(screen.getByLabelText(/name/i), {
       target: { value: "Ada" },
@@ -65,7 +65,7 @@ describe("LoginPage", () => {
       target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Create account" }));
+    fireEvent.click(screen.getByTestId("auth-submit"));
 
     await waitFor(() => {
       expect(signupMock).toHaveBeenCalledWith({

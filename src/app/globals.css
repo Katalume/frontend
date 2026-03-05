@@ -2,7 +2,13 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
+  --app-bg: #0f1117;
+  --app-surface: #1a1d24;
+  --app-surface-2: #232832;
+  --app-text: #e4e7ee;
+  --app-muted: #97a0af;
+  --app-accent: #f59e0b;
 }
 
 .dark {
@@ -21,11 +27,12 @@ body {
 
 body {
   margin: 0;
-  background-color: #f5f6f8;
-  color: #111827;
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  text-rendering: optimizeLegibility;
 }
 
-.dark body {
-  background-color: #0a0a0a;
-  color: #f3f4f6;
+::selection {
+  background: #f59e0b;
+  color: #111827;
 }

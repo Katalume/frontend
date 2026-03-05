@@ -1,10 +1,10 @@
 "use client";
 
 import { FormEvent, Suspense, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import ThemeSwitcher from "@/app/components/ThemeSwitcher";
 
 type AuthMode = "login" | "signup";
 
@@ -22,7 +22,6 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, signup, isLoading } = useAuth();
-
   const [mode, setMode] = useState<AuthMode>("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -46,6 +45,7 @@ function LoginForm() {
       setErrorMessage("Email and password are required.");
       return;
     }
+
     if (mode === "signup" && !trimmedName) {
       setErrorMessage("Name is required for signup.");
       return;
@@ -70,110 +70,128 @@ function LoginForm() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-zinc-100 px-4 py-12 dark:bg-zinc-950">
-      <div className="absolute right-4 top-4">
-        <ThemeSwitcher />
-      </div>
-      <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-            MLBoost
-          </p>
-          <h1 className="mt-2 text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
-            {mode === "login" ? "Sign in to continue" : "Create your account"}
-          </h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            Practice ML coding with instant feedback.
-          </p>
-        </div>
-
-        <div className="mb-6 grid grid-cols-2 rounded-lg border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-700 dark:bg-zinc-800">
-          <button
-            type="button"
-            className={`rounded-md px-3 py-2 text-sm font-medium transition ${
-              mode === "login"
-                ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100"
-                : "text-zinc-600 hover:text-zinc-800 dark:text-zinc-300 dark:hover:text-zinc-100"
-            }`}
-            onClick={() => setMode("login")}
-          >
-            Login
-          </button>
-          <button
-            type="button"
-            className={`rounded-md px-3 py-2 text-sm font-medium transition ${
-              mode === "signup"
-                ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100"
-                : "text-zinc-600 hover:text-zinc-800 dark:text-zinc-300 dark:hover:text-zinc-100"
-            }`}
-            onClick={() => setMode("signup")}
-          >
-            Sign up
+    <div className="min-h-screen bg-[#d8dce0]">
+      <header className="border-b border-[#d3d7dc] bg-[#f7f8fa]">
+        <div className="mx-auto flex h-14 w-full max-w-[1200px] items-center justify-between px-5">
+          <div className="flex items-center gap-6 text-[#555d67]">
+            <span className="text-2xl text-[#f59e0b]">⌂</span>
+            <button className="text-sm hover:text-[#14171f]">Explore</button>
+            <button className="text-sm hover:text-[#14171f]">Problems</button>
+            <button className="text-sm hover:text-[#14171f]">Contest</button>
+            <button className="text-sm hover:text-[#14171f]">Discuss</button>
+            <button className="text-sm hover:text-[#14171f]">Interview</button>
+            <button className="text-sm text-[#f59e0b]">Store</button>
+          </div>
+          <button className="rounded-xl bg-[#f8ecda] px-4 py-1.5 text-sm font-medium text-[#e89600]">
+            Premium
           </button>
         </div>
+      </header>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          {mode === "signup" && (
+      <main className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-[1200px] items-center justify-center px-4 py-12">
+        <section className="w-full max-w-[430px] rounded-sm border border-[#d5dae1] bg-[#f7f8fa] px-7 py-8 shadow-[0_1px_0_#cdd3db]">
+          <div className="mb-6 text-center">
+            <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#111827] text-lg text-[#f59e0b]">
+              ⌂
+            </div>
+            <h1 className="mt-3 text-3xl font-semibold text-[#171a21]">MLBoost</h1>
+          </div>
+
+          <div className="mb-4 grid grid-cols-2 overflow-hidden rounded border border-[#d3d8df]">
+            <button
+              type="button"
+              onClick={() => setMode("login")}
+              data-testid="auth-tab-login"
+              className={`py-2 text-sm ${
+                mode === "login"
+                  ? "bg-[#465e6b] font-medium text-white"
+                  : "bg-white text-[#5b6572]"
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("signup")}
+              data-testid="auth-tab-signup"
+              className={`py-2 text-sm ${
+                mode === "signup"
+                  ? "bg-[#465e6b] font-medium text-white"
+                  : "bg-white text-[#5b6572]"
+              }`}
+            >
+              Sign Up
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-3">
+            {mode === "signup" ? (
+              <label className="block">
+                <span className="sr-only">Name</span>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  placeholder="Name"
+                  className="w-full rounded border border-[#cbd2db] bg-white px-3 py-2.5 text-sm text-[#1a212b] outline-none ring-[#4f6773] placeholder:text-[#8ca0b2] focus:ring-1"
+                />
+              </label>
+            ) : null}
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-                Name
-              </span>
+              <span className="sr-only">Email</span>
               <input
+                type="email"
                 required
-                type="text"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none ring-blue-500 transition placeholder:text-zinc-400 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-                placeholder="Ada Lovelace"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="Username or E-mail"
+                className="w-full rounded border border-[#cbd2db] bg-white px-3 py-2.5 text-sm text-[#1a212b] outline-none ring-[#4f6773] placeholder:text-[#8ca0b2] focus:ring-1"
               />
             </label>
-          )}
+            <label className="block">
+              <span className="sr-only">Password</span>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Password"
+                className="w-full rounded border border-[#cbd2db] bg-white px-3 py-2.5 text-sm text-[#1a212b] outline-none ring-[#4f6773] placeholder:text-[#8ca0b2] focus:ring-1"
+              />
+            </label>
 
-          <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-              Email
-            </span>
-            <input
-              required
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none ring-blue-500 transition placeholder:text-zinc-400 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-              placeholder="you@example.com"
-            />
-          </label>
+            {errorMessage ? (
+              <p className="rounded border border-[#e6b4b4] bg-[#fef4f4] px-3 py-2 text-sm text-[#b21f1f]">
+                {errorMessage}
+              </p>
+            ) : null}
 
-          <label className="block">
-            <span className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-200">
-              Password
-            </span>
-            <input
-              required
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 outline-none ring-blue-500 transition placeholder:text-zinc-400 focus:ring-2 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-              placeholder="••••••••"
-            />
-          </label>
+            <button
+              type="submit"
+              disabled={isLoading}
+              data-testid="auth-submit"
+              className="flex w-full items-center justify-center gap-2 rounded bg-[#455d69] py-2.5 text-sm font-medium text-white hover:bg-[#3e5561] disabled:opacity-60"
+            >
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {mode === "login" ? "Sign In" : "Create Account"}
+            </button>
+          </form>
 
-          {errorMessage && (
-            <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
-              {errorMessage}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-          >
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {mode === "login" ? "Sign in" : "Create account"}
-          </button>
-        </form>
-      </div>
-    </main>
+          <div className="mt-4 flex items-center justify-between text-sm text-[#4b5e6d]">
+            <Link href="#" className="hover:underline">
+              Forgot Password?
+            </Link>
+            <button
+              onClick={() => setMode(mode === "login" ? "signup" : "login")}
+              className="hover:underline"
+            >
+              {mode === "login" ? "Sign Up" : "Back to Login"}
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
 
@@ -181,7 +199,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <main className="flex min-h-screen items-center justify-center bg-zinc-100 text-zinc-700 dark:bg-zinc-950 dark:text-zinc-300">
+        <main className="flex min-h-screen items-center justify-center bg-[#d8dce0] text-[#4f5966]">
           Loading authentication...
         </main>
       }

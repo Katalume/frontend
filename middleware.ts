@@ -2,7 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME } from "./src/lib/auth";
 
 function isAuthenticated(request: NextRequest): boolean {
-  return request.cookies.has(AUTH_COOKIE_NAME);
+  const cookieValue = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  if (!cookieValue) {
+    return false;
+  }
+
+  const expiresAtMs = Number(cookieValue);
+  if (!Number.isFinite(expiresAtMs)) {
+    return true;
+  }
+
+  return expiresAtMs > Date.now();
 }
 
 export function middleware(request: NextRequest) {

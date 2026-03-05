@@ -468,26 +468,65 @@ export function getBackendMode(): ApiMode {
   return getNormalizedApiMode();
 }
 
+function shouldUseSecureCookie(): boolean {
+  return isBrowser() && window.location.protocol === "https:";
+}
+
+function buildCookieAttributes(maxAgeSeconds: number): string {
+  const attrs = ["path=/", `max-age=${maxAgeSeconds}`, "samesite=lax"];
+  if (shouldUseSecureCookie()) {
+    attrs.push("secure");
+  }
+  return attrs.join("; ");
+}
+
+function getAccessToken(): string | null {
+  if (!isBrowser()) {
+    return null;
+  }
+  const token = window.localStorage.getItem(ACCESS_TOKEN_KEY);
+  if (!token) {
+    return null;
+  }
+  const trimmed = token.trim();
+  return trimmed || null;
+}
+
 function persistSession(session: AuthSession): void {
   if (!isBrowser()) {
     return;
   }
+
+  const expiresAtMs = new Date(session.expiresAt).getTime();
+  const cookieValue = Number.isFinite(expiresAtMs)
+    ? String(expiresAtMs)
+    : String(Date.now() + AUTH_COOKIE_TTL_SECONDS * 1000);
+
   window.localStorage.setItem(MOCK_SESSION_KEY, JSON.stringify(session));
   window.localStorage.setItem(ACCESS_TOKEN_KEY, session.accessToken);
-  window.document.cookie = `${AUTH_COOKIE_NAME}=1; path=/; max-age=${AUTH_COOKIE_TTL_SECONDS}; samesite=lax`;
+  window.document.cookie = `${AUTH_COOKIE_NAME}=${cookieValue}; ${buildCookieAttributes(
+    AUTH_COOKIE_TTL_SECONDS
+  )}`;
 }
 
 function readStoredSession(): AuthSession | null {
   if (!isBrowser()) {
     return null;
   }
-  const hasAuthCookie = window.document.cookie
+  const authCookie = window.document.cookie
     .split(";")
-    .some((part) => part.trim().startsWith(`${AUTH_COOKIE_NAME}=`));
+    .find((part) => part.trim().startsWith(`${AUTH_COOKIE_NAME}=`));
 
-  if (!hasAuthCookie) {
+  if (!authCookie) {
     window.localStorage.removeItem(MOCK_SESSION_KEY);
     window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+    return null;
+  }
+
+  const cookieValue = authCookie.split("=")[1];
+  const cookieExpiryMs = Number(cookieValue);
+  if (Number.isFinite(cookieExpiryMs) && cookieExpiryMs < Date.now()) {
+    clearStoredSession();
     return null;
   }
 
@@ -497,7 +536,12 @@ function readStoredSession(): AuthSession | null {
   }
 
   try {
-    return JSON.parse(raw) as AuthSession;
+    const parsed = JSON.parse(raw) as AuthSession;
+    if (new Date(parsed.expiresAt).getTime() <= Date.now()) {
+      clearStoredSession();
+      return null;
+    }
+    return parsed;
   } catch {
     window.localStorage.removeItem(MOCK_SESSION_KEY);
     return null;
@@ -510,7 +554,7 @@ function clearStoredSession(): void {
   }
   window.localStorage.removeItem(MOCK_SESSION_KEY);
   window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-  window.document.cookie = `${AUTH_COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
+  window.document.cookie = `${AUTH_COOKIE_NAME}=; ${buildCookieAttributes(0)}`;
 }
 
 function createMockSession(name: string, email: string): AuthSession {
@@ -844,11 +888,14 @@ async function fetchWithRetry<T>(
     const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
     try {
+      const token = getAccessToken();
       const response = await fetch(`${API_BASE_URL}${path}`, {
         ...init,
         signal: controller.signal,
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
           ...(init?.headers || {}),
         },
       });

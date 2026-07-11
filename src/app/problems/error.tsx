@@ -1,12 +1,19 @@
 "use client";
 
+import { useEffect } from "react";
+import { reportError } from "@/lib/observability";
+
 export default function ProblemsError({
   error,
   reset,
 }: {
-  error: Error;
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    reportError(error, { boundary: "problems", digest: error.digest });
+  }, [error]);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-zinc-100 px-6 text-zinc-800 dark:bg-zinc-950 dark:text-zinc-100">
       <p className="text-sm text-red-600 dark:text-red-300">

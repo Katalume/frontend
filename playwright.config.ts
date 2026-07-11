@@ -20,9 +20,12 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev -- --port 4173",
+    // In CI, exercise the production bundle; locally use the dev server.
+    command: process.env.CI
+      ? "npm run build && npm run start -- --port 4173"
+      : "npm run dev -- --port 4173",
     url: "http://127.0.0.1:4173/login",
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 180_000,
   },
 });

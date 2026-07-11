@@ -1,15 +1,21 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { reportError } from "@/lib/observability";
 
 export default function ProblemArenaError({
   error,
   reset,
 }: {
-  error: Error;
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
   const router = useRouter();
+
+  useEffect(() => {
+    reportError(error, { boundary: "problem-arena", digest: error.digest });
+  }, [error]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-zinc-950 px-6 text-zinc-100">

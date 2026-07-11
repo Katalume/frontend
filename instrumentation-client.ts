@@ -7,3 +7,6 @@ Sentry.init({
   enabled: Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN),
   integrations: (integrations) => integrations,
 });
+
+// Required by @sentry/nextjs to instrument client-side navigations.
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

@@ -17,13 +17,28 @@ export async function trackEvent(event: AnalyticsEvent): Promise<void> {
   const enriched = enrichEvent(event);
 
   if (typeof window !== "undefined") {
-    const history = window.localStorage.getItem("mlboost.analytics.events");
-    const parsed = history ? (JSON.parse(history) as AnalyticsEvent[]) : [];
+    let parsed: AnalyticsEvent[] = [];
+    try {
+      const history = window.localStorage.getItem("mlboost.analytics.events");
+      if (history) {
+        const decoded = JSON.parse(history);
+        if (Array.isArray(decoded)) {
+          parsed = decoded as AnalyticsEvent[];
+        }
+      }
+    } catch {
+      // Corrupt analytics history — start fresh rather than throwing.
+      parsed = [];
+    }
     parsed.unshift(enriched);
-    window.localStorage.setItem(
-      "mlboost.analytics.events",
-      JSON.stringify(parsed.slice(0, 150))
-    );
+    try {
+      window.localStorage.setItem(
+        "mlboost.analytics.events",
+        JSON.stringify(parsed.slice(0, 150))
+      );
+    } catch {
+      // Storage full or unavailable — ignore.
+    }
   }
 
   if (!ANALYTICS_ENDPOINT) {

@@ -1376,7 +1376,7 @@ export async function submitSolution(
   return result;
 }
 
-export async function fetchSubmissionHistory(
+async function mockFetchSubmissionHistory(
   problemIdentifier: string
 ): Promise<SubmissionRecord[]> {
   await wait(120);
@@ -1387,6 +1387,85 @@ export async function fetchSubmissionHistory(
     readSubmissionHistoryStore()
       .filter((entry) => entry.problemSlug === slug || entry.problemId === problemIdentifier)
       .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
+  );
+}
+
+interface LiveSubmission {
+  _id: string;
+  problemId?: { _id?: string; title?: string; slug?: string } | string;
+  code?: string;
+  status?: string;
+  runtime?: number;
+  memory?: number;
+  errorMessage?: string;
+  createdAt?: string;
+}
+
+function toVerdictFromLive(status?: string): SubmissionResult["status"] {
+  if (status === "Accepted") return "Accepted";
+  if (status === "Runtime Error") return "Runtime Error";
+  return "Failed";
+}
+
+function toSubmissionRecordFromLive(raw: LiveSubmission): SubmissionRecord {
+  const populated =
+    raw.problemId && typeof raw.problemId === "object" ? raw.problemId : undefined;
+  const problemId =
+    populated?._id || (typeof raw.problemId === "string" ? raw.problemId : "") || "";
+  const status = toVerdictFromLive(raw.status);
+  const createdAt = raw.createdAt || new Date().toISOString();
+  const accepted = status === "Accepted";
+
+  const result: SubmissionResult = {
+    submissionId: raw._id,
+    problemId,
+    status,
+    // Backend stores Judge0 time in seconds and memory in KB.
+    runtimeMs: Math.round((raw.runtime || 0) * 1000),
+    memoryMb: Math.round(((raw.memory || 0) / 1024) * 100) / 100,
+    score: accepted ? 100 : 0,
+    message: raw.errorMessage || status,
+    mode: "submit",
+    visibility: "hidden",
+    passedCount: accepted ? 1 : 0,
+    totalCount: 1,
+    traceback: raw.errorMessage,
+    testCases: [],
+    source: "live",
+    submittedAt: createdAt,
+  };
+
+  return {
+    id: raw._id,
+    problemId,
+    problemSlug: populated?.slug || problemId,
+    problemTitle: populated?.title || "Problem",
+    code: raw.code || "",
+    mode: "submit",
+    result,
+    createdAt,
+  };
+}
+
+async function liveFetchSubmissionHistory(
+  problemIdentifier: string
+): Promise<SubmissionRecord[]> {
+  const query = problemIdentifier
+    ? `?problemId=${encodeURIComponent(problemIdentifier)}`
+    : "";
+  const data = await fetchWithRetry<LiveSubmission[]>(`/submissions${query}`, {
+    method: "GET",
+  });
+  return (Array.isArray(data) ? data : []).map(toSubmissionRecordFromLive);
+}
+
+export async function fetchSubmissionHistory(
+  problemIdentifier: string
+): Promise<SubmissionRecord[]> {
+  return runWithBackendSwitch(
+    "fetch_submission_history",
+    () => liveFetchSubmissionHistory(problemIdentifier),
+    () => mockFetchSubmissionHistory(problemIdentifier)
   );
 }
 

@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Mulish, Philosopher } from "next/font/google";
+import { Plus_Jakarta_Sans, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import WebVitalsReporter from "./WebVitalsReporter";
 
-const mulish = Mulish({
-  variable: "--font-mulish",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
   display: "swap",
 });
 
-const philosopher = Philosopher({
-  variable: "--font-philosopher",
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
   subsets: ["latin"],
   weight: ["400", "700"],
   display: "swap",
@@ -28,10 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${mulish.variable} ${philosopher.variable} antialiased`}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${jakarta.variable} ${spaceMono.variable}`}
+    >
+      <body className="antialiased">
         <Providers>
           <WebVitalsReporter />
           {children}

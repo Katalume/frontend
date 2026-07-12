@@ -59,7 +59,7 @@ export default function Landing() {
       {/* Top nav */}
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5">
         <div className="flex items-center gap-2.5">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-800 text-[13px] font-black text-white shadow-[0_4px_14px_-4px_rgba(99,107,47,0.55)]">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-400 to-brand-900 font-display text-[12px] font-bold text-white shadow-[0_4px_14px_-4px_rgba(80,80,129,0.58)]">
             ML
             <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/25" />
           </div>
@@ -71,11 +71,11 @@ export default function Landing() {
           <ThemeSwitcher compact />
           <Link
             href="/login"
-            className="rounded-full px-3 py-1.5 text-sm font-medium text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
+            className="whitespace-nowrap rounded-full px-2 py-1.5 text-sm font-medium text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white sm:px-3"
           >
             Sign in
           </Link>
-          <Link href="/login" className="btn-primary px-4 py-1.5 text-sm">
+          <Link href="/login" className="btn-primary whitespace-nowrap px-3 py-1.5 text-sm sm:px-4">
             Get started
           </Link>
         </div>
@@ -88,7 +88,7 @@ export default function Landing() {
           <span className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-white/60 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-600 dark:border-white/10 dark:bg-white/[0.04] dark:text-brand-400">
             <Sparkles className="h-3.5 w-3.5" /> LeetCode × Kaggle, for ML
           </span>
-          <h1 className="mx-auto mt-5 max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-zinc-900 dark:text-white sm:text-5xl md:text-6xl">
+          <h1 className="mx-auto mt-5 max-w-3xl font-display text-4xl font-bold leading-[1.08] tracking-[-0.05em] text-zinc-900 dark:text-white sm:text-5xl md:text-6xl">
             Practice machine learning like you{" "}
             <span className="text-gradient-brand">mean it.</span>
           </h1>
@@ -112,7 +112,7 @@ export default function Landing() {
 
         {/* Product visual — a stylized arena preview */}
         <div className="relative mx-auto mt-14 max-w-4xl">
-          <div className="pointer-events-none absolute -inset-x-10 -top-10 bottom-0 -z-10 rounded-[40px] bg-gradient-to-b from-brand-500/10 to-transparent blur-2xl" />
+          <div className="pointer-events-none absolute inset-x-0 -top-10 bottom-0 -z-10 rounded-[40px] bg-gradient-to-b from-brand-500/10 to-transparent blur-2xl sm:-inset-x-10" />
           <div className="card overflow-hidden p-0">
             <div className="flex items-center gap-2 border-b border-black/[0.05] px-4 py-2.5 dark:border-white/[0.06]">
               <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" />
@@ -160,7 +160,7 @@ export default function Landing() {
       <section className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-4 px-5 py-8 sm:grid-cols-3">
         {STATS.map((s) => (
           <div key={s.value} className="card card-hover p-5 text-center">
-            <p className="text-2xl font-bold tracking-tight text-gradient-brand">{s.value}</p>
+            <p className="font-display text-2xl font-bold tracking-tight text-gradient-brand">{s.value}</p>
             <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{s.label}</p>
           </div>
         ))}
@@ -198,12 +198,12 @@ export default function Landing() {
 
       {/* Final CTA */}
       <section className="mx-auto w-full max-w-6xl px-5 pb-16">
-        <div className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-[#171a10] px-8 py-12 text-center text-white">
+        <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0f0e47] px-8 py-12 text-center text-white">
           <div
             className="pointer-events-none absolute inset-0"
             style={{
               backgroundImage:
-                "radial-gradient(600px 300px at 80% -30%, rgba(99,107,47,0.62), transparent 60%), radial-gradient(500px 260px at 15% 130%, rgba(212,222,149,0.20), transparent 60%)",
+                "radial-gradient(600px 300px at 80% -30%, rgba(134,134,172,0.58), transparent 60%), radial-gradient(500px 260px at 15% 130%, rgba(80,80,129,0.34), transparent 60%)",
             }}
           />
           <div className="relative">

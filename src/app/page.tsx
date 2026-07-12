@@ -24,7 +24,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-zinc-400">
+      <div role="status" aria-label="Loading your session" className="flex min-h-screen items-center justify-center text-zinc-400">
         <Loader2 className="h-5 w-5 animate-spin text-brand-500" />
       </div>
     );

@@ -50,6 +50,12 @@ const STATS = [
 export default function Landing() {
   return (
     <div className="relative min-h-screen">
+      <a
+        href="#landing-main"
+        className="sr-only fixed left-4 top-4 z-50 rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white focus:not-sr-only"
+      >
+        Skip to main content
+      </a>
       {/* Top nav */}
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-5">
         <div className="flex items-center gap-2.5">
@@ -75,6 +81,7 @@ export default function Landing() {
         </div>
       </header>
 
+      <main id="landing-main">
       {/* Hero */}
       <section className="mx-auto w-full max-w-6xl px-5 pb-10 pt-10 sm:pt-16">
         <div className="mx-auto max-w-3xl text-center">
@@ -212,6 +219,7 @@ export default function Landing() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-3 border-t border-black/[0.05] px-5 py-6 text-xs text-zinc-400 dark:border-white/[0.06] sm:flex-row">

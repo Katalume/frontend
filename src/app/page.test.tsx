@@ -14,8 +14,8 @@ vi.mock("./components/MainLayout", () => ({
   ),
 }));
 vi.mock("@/lib/api", () => ({
-  fetchUserStats: vi.fn().mockResolvedValue(null),
-  fetchRecentActivity: vi.fn().mockResolvedValue([]),
+  fetchUserStats: vi.fn(() => new Promise(() => {})),
+  fetchRecentActivity: vi.fn(() => new Promise(() => {})),
 }));
 
 import Home from "./page";

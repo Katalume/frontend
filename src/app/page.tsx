@@ -77,13 +77,13 @@ function DashboardHome() {
       title="Dashboard"
       subtitle="Your daily machine learning practice command center"
     >
-      <section className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-[#171a10] px-7 py-8 text-white">
+      <section className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0f0e47] px-7 py-8 text-white">
         {/* ambient glow + grid inside the hero */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundImage:
-              "radial-gradient(600px 300px at 88% -20%, rgba(99,107,47,0.62), transparent 60%), radial-gradient(500px 260px at 10% 130%, rgba(212,222,149,0.20), transparent 60%)",
+              "radial-gradient(600px 300px at 88% -20%, rgba(134,134,172,0.58), transparent 60%), radial-gradient(500px 260px at 10% 130%, rgba(80,80,129,0.34), transparent 60%)",
           }}
         />
         <div className="relative max-w-2xl">

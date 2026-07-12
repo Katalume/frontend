@@ -45,7 +45,7 @@ export default function Navbar({
   return (
     <nav
       aria-label="Page header"
-      className={`fixed top-0 right-0 z-10 flex h-16 items-center gap-4 border-b border-zinc-200/70 bg-white/70 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#11130d]/80 ${
+      className={`fixed top-0 right-0 z-10 flex h-16 items-center gap-4 border-b border-zinc-200/70 bg-white/70 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#0a091e]/80 ${
         isSidebarOpen ? "left-0 px-5 lg:left-60" : "left-0 pl-16 pr-5 lg:px-5"
       }`}
     >
